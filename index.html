@@ -159,12 +159,9 @@
             correctLevel: QRCode.CorrectLevel.H,
         });
 
-        setTimeout(() => {
-            const qrCanvas = document.querySelector("#qrcode canvas");
-            if (qrCanvas) {
-                hint.style.display = "block";
-            }
-        }, 100);
+        if (document.querySelector("#qrcode canvas")) {
+            hint.style.display = "block";
+        }
     }
 </script>
 </body>
