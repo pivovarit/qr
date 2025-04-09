@@ -117,7 +117,7 @@
 </head>
 <body>
 <h1>QR Code Generator</h1>
-<input type="text" id="text" placeholder="Enter text or URL..." />
+<label for="text"></label><input type="text" id="text" placeholder="Enter text or URL..." />
 <br />
 <button id="generateBtn" onclick="generateQRCode()" disabled>Generate QR Code</button>
 
@@ -144,6 +144,14 @@
         qrContainer.innerHTML = "";
         hint.style.display = "none";
     });
+
+    input.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" && input.value.trim().length > 0) {
+            generateQRCode();
+        }
+    });
+
+    input.focus()
 
     function generateQRCode() {
         const text = input.value.trim();
