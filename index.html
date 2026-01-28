@@ -1695,38 +1695,39 @@
         const canvas = document.querySelector('#qrcode canvas');
         if (!canvas) return;
 
+        if (!navigator.clipboard?.write || !window.ClipboardItem) {
+            copyFeedback.textContent = 'Copy not supported in this browser';
+            copyFeedback.classList.add('visible');
+            setTimeout(() => {
+                copyFeedback.textContent = 'Copied to clipboard!';
+                copyFeedback.classList.remove('visible');
+            }, 3000);
+            return;
+        }
+
         try {
-            const blob = await new Promise((resolve, reject) => {
-                canvas.toBlob((b) => {
-                    if (b) resolve(b);
-                    else reject(new Error('Failed to create blob'));
-                }, 'image/png');
+            const clipboardItem = new ClipboardItem({
+                'image/png': new Promise((resolve, reject) => {
+                    canvas.toBlob((blob) => {
+                        if (blob) resolve(blob);
+                        else reject(new Error('Failed to create blob'));
+                    }, 'image/png');
+                })
             });
-            await navigator.clipboard.write([
-                new ClipboardItem({ 'image/png': blob })
-            ]);
+            await navigator.clipboard.write([clipboardItem]);
 
             copyFeedback.classList.add('visible');
             setTimeout(() => {
                 copyFeedback.classList.remove('visible');
             }, 2000);
         } catch (err) {
-            try {
-                await navigator.clipboard.writeText(canvas.toDataURL('image/png'));
-                copyFeedback.textContent = 'Copied as data URL!';
-                copyFeedback.classList.add('visible');
-                setTimeout(() => {
-                    copyFeedback.textContent = 'Copied to clipboard!';
-                    copyFeedback.classList.remove('visible');
-                }, 2000);
-            } catch (e) {
-                copyFeedback.textContent = 'Copy failed - try downloading';
-                copyFeedback.classList.add('visible');
-                setTimeout(() => {
-                    copyFeedback.textContent = 'Copied to clipboard!';
-                    copyFeedback.classList.remove('visible');
-                }, 2000);
-            }
+            console.error('Clipboard error:', err);
+            copyFeedback.textContent = 'Copy failed - try Download instead';
+            copyFeedback.classList.add('visible');
+            setTimeout(() => {
+                copyFeedback.textContent = 'Copied to clipboard!';
+                copyFeedback.classList.remove('visible');
+            }, 3000);
         }
     });
 
