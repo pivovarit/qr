@@ -486,6 +486,13 @@
             border-color: var(--text-muted);
         }
 
+        .option-row input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: var(--accent);
+        }
+
         .size-display {
             display: flex;
             align-items: center;
@@ -1022,6 +1029,10 @@
                         <option value="Q">Quartile (25%)</option>
                         <option value="H" selected>High (30%)</option>
                     </select>
+                </div>
+                <div class="option-row">
+                    <label for="includeBorder">Include border</label>
+                    <input type="checkbox" id="includeBorder" checked />
                 </div>
             </div>
         </div>
@@ -1885,19 +1896,53 @@
         }
     }
 
+    const includeBorder = document.getElementById('includeBorder');
+
     downloadBtn.addEventListener('click', () => {
         const canvas = document.querySelector('#qrcode canvas');
         if (!canvas) return;
 
+        let downloadCanvas = canvas;
+
+        if (includeBorder.checked) {
+            const padding = 16;
+            const paddedCanvas = document.createElement('canvas');
+            paddedCanvas.width = canvas.width + padding * 2;
+            paddedCanvas.height = canvas.height + padding * 2;
+            const ctx = paddedCanvas.getContext('2d');
+
+            ctx.fillStyle = bgColor.value;
+            ctx.fillRect(0, 0, paddedCanvas.width, paddedCanvas.height);
+            ctx.drawImage(canvas, padding, padding);
+
+            downloadCanvas = paddedCanvas;
+        }
+
         const link = document.createElement('a');
         link.download = 'qrcode.png';
-        link.href = canvas.toDataURL('image/png');
+        link.href = downloadCanvas.toDataURL('image/png');
         link.click();
     });
 
     copyBtn.addEventListener('click', async () => {
         const canvas = document.querySelector('#qrcode canvas');
         if (!canvas) return;
+
+        let copyCanvas = canvas;
+
+        if (includeBorder.checked) {
+            const padding = 16;
+            const paddedCanvas = document.createElement('canvas');
+            paddedCanvas.width = canvas.width + padding * 2;
+            paddedCanvas.height = canvas.height + padding * 2;
+            const ctx = paddedCanvas.getContext('2d');
+
+            ctx.fillStyle = bgColor.value;
+            ctx.fillRect(0, 0, paddedCanvas.width, paddedCanvas.height);
+            ctx.drawImage(canvas, padding, padding);
+
+            copyCanvas = paddedCanvas;
+        }
 
         if (!navigator.clipboard?.write || !window.ClipboardItem) {
             copyFeedback.textContent = 'Copy not supported in this browser';
@@ -1912,7 +1957,7 @@
         try {
             const clipboardItem = new ClipboardItem({
                 'image/png': new Promise((resolve, reject) => {
-                    canvas.toBlob((blob) => {
+                    copyCanvas.toBlob((blob) => {
                         if (blob) resolve(blob);
                         else reject(new Error('Failed to create blob'));
                     }, 'image/png');
