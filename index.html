@@ -986,6 +986,11 @@
             background: transparent;
         }
 
+        body.embed-mode.embed-border #qrcode {
+            padding: 1rem;
+            border-radius: var(--radius-md);
+        }
+
         /* Ensure proper touch behavior */
         @media (hover: none) and (pointer: coarse) {
             .card:hover {
@@ -2038,8 +2043,14 @@
 
         if (!urlParam) return;
 
-        if (params.get('embed') === 'true' || params.get('embed') === '1') {
+        const isEmbed = params.get('embed') === 'true' || params.get('embed') === '1';
+        const hasBorder = params.get('border') !== 'false' && params.get('border') !== '0';
+
+        if (isEmbed) {
             document.body.classList.add('embed-mode');
+            if (hasBorder) {
+                document.body.classList.add('embed-border');
+            }
         }
 
         if (params.get('fg')) {
@@ -2068,6 +2079,10 @@
         if (textInput) {
             textInput.value = urlParam;
             generateQRCode();
+
+            if (isEmbed && hasBorder) {
+                qrContainer.style.backgroundColor = bgColor.value;
+            }
         }
     }
 
