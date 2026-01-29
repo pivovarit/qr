@@ -935,6 +935,57 @@
             }
         }
 
+        /* Embed mode - hide UI, show only QR code */
+        body.embed-mode {
+            background: transparent;
+            padding: 0;
+            margin: 0;
+            min-height: auto;
+            animation: none;
+        }
+
+        body.embed-mode .bg-orb,
+        body.embed-mode .header,
+        body.embed-mode .input-column,
+        body.embed-mode footer,
+        body.embed-mode .action-buttons,
+        body.embed-mode .copy-feedback {
+            display: none !important;
+        }
+
+        body.embed-mode .container {
+            max-width: none;
+            width: auto;
+        }
+
+        body.embed-mode .main-layout {
+            gap: 0;
+        }
+
+        body.embed-mode .qr-column {
+            width: auto;
+        }
+
+        body.embed-mode .qr-frame {
+            padding: 0;
+            background: transparent;
+            border-radius: 0;
+            box-shadow: none;
+            margin: 0;
+        }
+
+        body.embed-mode .qr-frame::before,
+        body.embed-mode .qr-frame::after {
+            display: none;
+        }
+
+        body.embed-mode #qrcode {
+            padding: 0;
+            margin: 0;
+            border-radius: 0;
+            background: transparent;
+        }
+
         /* Ensure proper touch behavior */
         @media (hover: none) and (pointer: coarse) {
             .card:hover {
@@ -1259,7 +1310,6 @@
                 const block = data.slice(dataIdx, dataIdx + blockLen);
                 dataBlocks.push(block);
 
-                // Generate EC for this block
                 const padded = new Uint8Array(blockLen + ecCodewordsPerBlock);
                 padded.set(block);
                 const ec = GF.polyDiv(padded, generator);
@@ -1981,6 +2031,47 @@
     });
 
     createInputFields('text');
+
+    function initFromUrlParams() {
+        const params = new URLSearchParams(window.location.search);
+        const urlParam = params.get('url');
+
+        if (!urlParam) return;
+
+        if (params.get('embed') === 'true' || params.get('embed') === '1') {
+            document.body.classList.add('embed-mode');
+        }
+
+        if (params.get('fg')) {
+            const fg = params.get('fg');
+            fgColor.value = fg.startsWith('#') ? fg : '#' + fg;
+        }
+        if (params.get('bg')) {
+            const bg = params.get('bg');
+            bgColor.value = bg.startsWith('#') ? bg : '#' + bg;
+        }
+        if (params.get('size')) {
+            const size = parseInt(params.get('size'));
+            if (size >= 128 && size <= 320) {
+                sizeSlider.value = size;
+                sizeValue.textContent = size + 'px';
+            }
+        }
+        if (params.get('ecl')) {
+            const ecl = params.get('ecl').toUpperCase();
+            if (['L', 'M', 'Q', 'H'].includes(ecl)) {
+                errorLevel.value = ecl;
+            }
+        }
+
+        const textInput = document.getElementById('text');
+        if (textInput) {
+            textInput.value = urlParam;
+            generateQRCode();
+        }
+    }
+
+    initFromUrlParams();
 </script>
 </body>
 </html>
