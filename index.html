@@ -1148,7 +1148,10 @@
                     { value: 'nopass', label: 'None' }
                 ]}
             ],
-            format: (values) => `WIFI:T:${values.encryption};S:${values.ssid};P:${values.password};;`
+            format: (values) => {
+                const esc = (s) => s.replace(/([\\;:"])/g, '\\$1');
+                return `WIFI:T:${values.encryption};S:${esc(values.ssid)};P:${esc(values.password)};;`;
+            }
         },
         vcard: {
             fields: [
@@ -1213,6 +1216,14 @@
     const sizeSlider = document.getElementById('sizeSlider');
     const sizeValue = document.getElementById('sizeValue');
     const errorLevel = document.getElementById('errorLevel');
+    const includeBorder = document.getElementById('includeBorder');
+
+    const ERROR_LEVELS = {
+        'L': QRCode.CorrectLevel.L,
+        'M': QRCode.CorrectLevel.M,
+        'Q': QRCode.CorrectLevel.Q,
+        'H': QRCode.CorrectLevel.H
+    };
 
     panelHeader.addEventListener('click', () => {
         panelHeader.classList.toggle('expanded');
@@ -1258,6 +1269,7 @@
                 const textarea = document.createElement('textarea');
                 textarea.id = field.id;
                 textarea.placeholder = field.placeholder;
+                textarea.setAttribute('aria-label', field.placeholder);
                 textarea.addEventListener('input', regenerateIfValid);
                 inputGroup.appendChild(textarea);
             } else {
@@ -1265,6 +1277,7 @@
                 input.type = field.type;
                 input.id = field.id;
                 input.placeholder = field.placeholder;
+                input.setAttribute('aria-label', field.placeholder);
                 input.addEventListener('input', regenerateIfValid);
                 inputGroup.appendChild(input);
             }
@@ -1320,12 +1333,6 @@
         if (!text) return;
 
         const size = parseInt(sizeSlider.value);
-        const errorLevels = {
-            'L': QRCode.CorrectLevel.L,
-            'M': QRCode.CorrectLevel.M,
-            'Q': QRCode.CorrectLevel.Q,
-            'H': QRCode.CorrectLevel.H
-        };
 
         qrContainer.innerHTML = '';
         new QRCode(qrContainer, {
@@ -1334,7 +1341,7 @@
             height: size,
             colorDark: fgColor.value,
             colorLight: bgColor.value,
-            correctLevel: errorLevels[errorLevel.value]
+            correctLevel: ERROR_LEVELS[errorLevel.value]
         });
 
         if (document.querySelector('#qrcode canvas')) {
@@ -1343,53 +1350,35 @@
         }
     }
 
-    const includeBorder = document.getElementById('includeBorder');
+    function getExportCanvas() {
+        const canvas = document.querySelector('#qrcode canvas');
+        if (!canvas) return null;
+        if (!includeBorder.checked) return canvas;
+
+        const padding = 16;
+        const padded = document.createElement('canvas');
+        padded.width = canvas.width + padding * 2;
+        padded.height = canvas.height + padding * 2;
+        const ctx = padded.getContext('2d');
+        ctx.fillStyle = bgColor.value;
+        ctx.fillRect(0, 0, padded.width, padded.height);
+        ctx.drawImage(canvas, padding, padding);
+        return padded;
+    }
 
     downloadBtn.addEventListener('click', () => {
-        const canvas = document.querySelector('#qrcode canvas');
+        const canvas = getExportCanvas();
         if (!canvas) return;
-
-        let downloadCanvas = canvas;
-
-        if (includeBorder.checked) {
-            const padding = 16;
-            const paddedCanvas = document.createElement('canvas');
-            paddedCanvas.width = canvas.width + padding * 2;
-            paddedCanvas.height = canvas.height + padding * 2;
-            const ctx = paddedCanvas.getContext('2d');
-
-            ctx.fillStyle = bgColor.value;
-            ctx.fillRect(0, 0, paddedCanvas.width, paddedCanvas.height);
-            ctx.drawImage(canvas, padding, padding);
-
-            downloadCanvas = paddedCanvas;
-        }
 
         const link = document.createElement('a');
         link.download = 'qrcode.png';
-        link.href = downloadCanvas.toDataURL('image/png');
+        link.href = canvas.toDataURL('image/png');
         link.click();
     });
 
     copyBtn.addEventListener('click', async () => {
-        const canvas = document.querySelector('#qrcode canvas');
+        const canvas = getExportCanvas();
         if (!canvas) return;
-
-        let copyCanvas = canvas;
-
-        if (includeBorder.checked) {
-            const padding = 16;
-            const paddedCanvas = document.createElement('canvas');
-            paddedCanvas.width = canvas.width + padding * 2;
-            paddedCanvas.height = canvas.height + padding * 2;
-            const ctx = paddedCanvas.getContext('2d');
-
-            ctx.fillStyle = bgColor.value;
-            ctx.fillRect(0, 0, paddedCanvas.width, paddedCanvas.height);
-            ctx.drawImage(canvas, padding, padding);
-
-            copyCanvas = paddedCanvas;
-        }
 
         if (!navigator.clipboard?.write || !window.ClipboardItem) {
             copyFeedback.textContent = 'Copy not supported in this browser';
@@ -1404,7 +1393,7 @@
         try {
             const clipboardItem = new ClipboardItem({
                 'image/png': new Promise((resolve, reject) => {
-                    copyCanvas.toBlob((blob) => {
+                    canvas.toBlob((blob) => {
                         if (blob) resolve(blob);
                         else reject(new Error('Failed to create blob'));
                     }, 'image/png');

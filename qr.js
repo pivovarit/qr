@@ -605,11 +605,6 @@
         container.innerHTML = '';
         container.appendChild(canvas);
 
-        const img = document.createElement('img');
-        img.src = canvas.toDataURL('image/png');
-        img.style.display = 'none';
-        container.appendChild(img);
-
         return canvas;
     }
 
