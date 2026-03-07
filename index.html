@@ -1117,6 +1117,10 @@
                         <span class="icon">📋</span>
                         <span>Copy</span>
                     </button>
+                    <button class="action-btn" id="shareBtn">
+                        <span class="icon">🔗</span>
+                        <span>Share</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -1207,6 +1211,7 @@
     const actionButtons = document.getElementById('actionButtons');
     const downloadBtn = document.getElementById('downloadBtn');
     const copyBtn = document.getElementById('copyBtn');
+    const shareBtn = document.getElementById('shareBtn');
     const copyFeedback = document.getElementById('copyFeedback');
 
     const panelHeader = document.getElementById('panelHeader');
@@ -1408,6 +1413,39 @@
         } catch (err) {
             console.error('Clipboard error:', err);
             copyFeedback.textContent = 'Copy failed - try Download instead';
+            copyFeedback.classList.add('visible');
+            setTimeout(() => {
+                copyFeedback.textContent = 'Copied to clipboard!';
+                copyFeedback.classList.remove('visible');
+            }, 3000);
+        }
+    });
+
+    shareBtn.addEventListener('click', async () => {
+        const preset = presets[presetSelect.value];
+        const values = collectFormValues();
+        const text = preset.format(values);
+        if (!text) return;
+
+        const params = new URLSearchParams();
+        params.set('url', text);
+        if (fgColor.value !== '#000000') params.set('fg', fgColor.value.slice(1));
+        if (bgColor.value !== '#ffffff') params.set('bg', bgColor.value.slice(1));
+        if (sizeSlider.value !== '256') params.set('size', sizeSlider.value);
+        if (errorLevel.value !== 'H') params.set('ecl', errorLevel.value);
+
+        const shareUrl = window.location.origin + window.location.pathname + '?' + params.toString();
+
+        try {
+            await navigator.clipboard.writeText(shareUrl);
+            copyFeedback.textContent = 'Link copied to clipboard!';
+            copyFeedback.classList.add('visible');
+            setTimeout(() => {
+                copyFeedback.textContent = 'Copied to clipboard!';
+                copyFeedback.classList.remove('visible');
+            }, 2000);
+        } catch {
+            copyFeedback.textContent = 'Could not copy link';
             copyFeedback.classList.add('visible');
             setTimeout(() => {
                 copyFeedback.textContent = 'Copied to clipboard!';
