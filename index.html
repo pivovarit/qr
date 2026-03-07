@@ -1083,8 +1083,8 @@
                 <div class="option-row">
                     <label for="sizeSlider">Size</label>
                     <div class="size-display">
-                        <input type="range" id="sizeSlider" min="128" max="320" value="192" step="32" />
-                        <span class="size-value" id="sizeValue">192px</span>
+                        <input type="range" id="sizeSlider" min="128" max="1024" value="256" step="32" />
+                        <span class="size-value" id="sizeValue">256px</span>
                     </div>
                 </div>
                 <div class="option-row">
@@ -1444,7 +1444,7 @@
         }
         if (params.get('size')) {
             const size = parseInt(params.get('size'));
-            if (size >= 128 && size <= 320) {
+            if (size >= 128 && size <= 1024) {
                 sizeSlider.value = size;
                 sizeValue.textContent = size + 'px';
             }
