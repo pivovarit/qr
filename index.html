@@ -1160,16 +1160,22 @@
         vcard: {
             fields: [
                 { id: 'name', type: 'text', placeholder: 'Full Name' },
+                { id: 'title', type: 'text', placeholder: 'Job Title (optional)' },
+                { id: 'org', type: 'text', placeholder: 'Organization (optional)' },
                 { id: 'phone', type: 'tel', placeholder: 'Phone Number' },
                 { id: 'email', type: 'email', placeholder: 'Email Address' },
-                { id: 'org', type: 'text', placeholder: 'Organization (optional)' }
+                { id: 'url', type: 'text', placeholder: 'Website URL (optional)' },
+                { id: 'address', type: 'text', placeholder: 'Address (optional)' }
             ],
             format: (values) => {
                 let vcard = 'BEGIN:VCARD\nVERSION:3.0\n';
                 if (values.name) vcard += `FN:${values.name}\n`;
+                if (values.title) vcard += `TITLE:${values.title}\n`;
+                if (values.org) vcard += `ORG:${values.org}\n`;
                 if (values.phone) vcard += `TEL:${values.phone}\n`;
                 if (values.email) vcard += `EMAIL:${values.email}\n`;
-                if (values.org) vcard += `ORG:${values.org}\n`;
+                if (values.url) vcard += `URL:${values.url}\n`;
+                if (values.address) vcard += `ADR:;;${values.address};;;;\n`;
                 vcard += 'END:VCARD';
                 return vcard;
             }
