@@ -731,6 +731,38 @@ footer a:hover {
     border-radius: 20px;
 }
 
+.cross-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 2rem;
+    padding: 1rem;
+    font-size: 0.8rem;
+    position: relative;
+    z-index: 1;
+}
+
+.cross-links-label {
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.cross-links a {
+    color: var(--accent);
+    text-decoration: none;
+    padding: 0.25rem 0.6rem;
+    border-radius: 16px;
+    border: 1px solid var(--border-subtle);
+    transition: all 0.2s ease;
+}
+
+.cross-links a:hover {
+    background: var(--accent-light);
+    border-color: var(--accent);
+}
+
 .seo-content {
     margin-top: 2rem;
     padding: 2rem;

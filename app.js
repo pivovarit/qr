@@ -336,7 +336,7 @@ const pathSegments = window.location.pathname.split('/').filter(Boolean);
 const pathPreset = (pathSegments.pop() || '').replace(/\.html?$/, '').toLowerCase();
 if (pathPreset && presets[pathPreset]) {
     presetSelect.value = pathPreset;
-    presetSelect.parentElement.style.display = 'none';
+    presetSelect.closest('.card').style.display = 'none';
 }
 createInputFields(presetSelect.value);
 

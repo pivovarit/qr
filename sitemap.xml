@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <loc>https://qr.pivovarit.com/</loc>
+        <priority>1.0</priority>
+    </url>
+    <url>
+        <loc>https://qr.pivovarit.com/wifi/</loc>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://qr.pivovarit.com/vcard/</loc>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://qr.pivovarit.com/email/</loc>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://qr.pivovarit.com/sms/</loc>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://qr.pivovarit.com/phone/</loc>
+        <priority>0.8</priority>
+    </url>
+</urlset>
