@@ -92,6 +92,15 @@ const sizeValue = document.getElementById('sizeValue');
 const errorLevel = document.getElementById('errorLevel');
 const includeBorder = document.getElementById('includeBorder');
 
+function showFeedback(message, { duration = 2000, isError = false } = {}) {
+    copyFeedback.textContent = message;
+    copyFeedback.classList.toggle('error', isError);
+    copyFeedback.classList.add('visible');
+    setTimeout(() => {
+        copyFeedback.classList.remove('visible', 'error');
+    }, duration);
+}
+
 const ERROR_LEVELS = {
     'L': QRCode.CorrectLevel.L,
     'M': QRCode.CorrectLevel.M,
@@ -209,14 +218,20 @@ function generateQRCode() {
     const size = parseInt(sizeSlider.value);
 
     qrContainer.innerHTML = '';
-    new QRCode(qrContainer, {
-        text: text,
-        width: size,
-        height: size,
-        colorDark: fgColor.value,
-        colorLight: bgColor.value,
-        correctLevel: ERROR_LEVELS[errorLevel.value]
-    });
+    try {
+        new QRCode(qrContainer, {
+            text: text,
+            width: size,
+            height: size,
+            colorDark: fgColor.value,
+            colorLight: bgColor.value,
+            correctLevel: ERROR_LEVELS[errorLevel.value]
+        });
+    } catch (err) {
+        clearQRCode();
+        showFeedback('Text is too long for a QR code — try shorter input or lower error correction', { duration: 4000, isError: true });
+        return;
+    }
 
     if (document.querySelector('#qrcode canvas')) {
         qrFrame.classList.add('visible');
@@ -255,12 +270,7 @@ copyBtn.addEventListener('click', async () => {
     if (!canvas) return;
 
     if (!navigator.clipboard?.write || !window.ClipboardItem) {
-        copyFeedback.textContent = 'Copy not supported in this browser';
-        copyFeedback.classList.add('visible');
-        setTimeout(() => {
-            copyFeedback.textContent = 'Copied to clipboard!';
-            copyFeedback.classList.remove('visible');
-        }, 3000);
+        showFeedback('Copy not supported in this browser — try Download instead', { duration: 3000, isError: true });
         return;
     }
 
@@ -269,24 +279,15 @@ copyBtn.addEventListener('click', async () => {
             'image/png': new Promise((resolve, reject) => {
                 canvas.toBlob((blob) => {
                     if (blob) resolve(blob);
-                    else reject(new Error('Failed to create blob'));
+                    else reject(new Error('Failed to create image'));
                 }, 'image/png');
             })
         });
         await navigator.clipboard.write([clipboardItem]);
-
-        copyFeedback.classList.add('visible');
-        setTimeout(() => {
-            copyFeedback.classList.remove('visible');
-        }, 2000);
+        showFeedback('Copied to clipboard!');
     } catch (err) {
         console.error('Clipboard error:', err);
-        copyFeedback.textContent = 'Copy failed - try Download instead';
-        copyFeedback.classList.add('visible');
-        setTimeout(() => {
-            copyFeedback.textContent = 'Copied to clipboard!';
-            copyFeedback.classList.remove('visible');
-        }, 3000);
+        showFeedback('Copy failed — try Download instead', { duration: 3000, isError: true });
     }
 });
 
@@ -307,19 +308,9 @@ shareBtn.addEventListener('click', async () => {
 
     try {
         await navigator.clipboard.writeText(shareUrl);
-        copyFeedback.textContent = 'Link copied to clipboard!';
-        copyFeedback.classList.add('visible');
-        setTimeout(() => {
-            copyFeedback.textContent = 'Copied to clipboard!';
-            copyFeedback.classList.remove('visible');
-        }, 2000);
+        showFeedback('Link copied to clipboard!');
     } catch {
-        copyFeedback.textContent = 'Could not copy link';
-        copyFeedback.classList.add('visible');
-        setTimeout(() => {
-            copyFeedback.textContent = 'Copied to clipboard!';
-            copyFeedback.classList.remove('visible');
-        }, 3000);
+        showFeedback('Could not copy link — clipboard access denied', { duration: 3000, isError: true });
     }
 });
 
