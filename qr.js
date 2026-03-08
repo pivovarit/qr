@@ -597,7 +597,11 @@
         for (let r = 0; r < qr.size; r++) {
             for (let c = 0; c < qr.size; c++) {
                 if (qr.matrix[r][c] === 1) {
-                    ctx.fillRect(offset + c * moduleSize, offset + r * moduleSize, moduleSize, moduleSize);
+                    const x = Math.round(offset + c * moduleSize);
+                    const y = Math.round(offset + r * moduleSize);
+                    const w = Math.round(offset + (c + 1) * moduleSize) - x;
+                    const h = Math.round(offset + (r + 1) * moduleSize) - y;
+                    ctx.fillRect(x, y, w, h);
                 }
             }
         }

@@ -565,7 +565,10 @@ body.dark .qr-frame::after {
 
 #qrcode canvas {
     display: block;
-    border-radius: 8px;
+}
+
+#qrcode img {
+    display: none;
 }
 
 .action-buttons {
