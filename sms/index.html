@@ -64,18 +64,6 @@
 
     <div class="main-layout">
         <div class="input-column">
-            <div class="card preset-selector">
-                <div class="card-label">Type</div>
-                <select id="presetSelect">
-                    <option value="text">Plain Text / URL</option>
-                    <option value="wifi">WiFi Network</option>
-                    <option value="vcard">Contact Card (vCard)</option>
-                    <option value="email">Email Address</option>
-                    <option value="sms">SMS Message</option>
-                    <option value="phone">Phone Number</option>
-                </select>
-            </div>
-
             <div class="card">
                 <div class="card-label">Content</div>
                 <div class="input-group" id="inputGroup">
@@ -167,6 +155,15 @@
 </div>
 
 <div class="copy-feedback" id="copyFeedback">Copied to clipboard!</div>
+
+<div class="coffee-overlay" id="coffeeOverlay">
+    <div class="coffee-modal">
+        <p class="coffee-status" id="coffeeStatus"></p>
+        <p class="coffee-message">Enjoying this tool? ☕</p>
+        <a href="https://buymeacoffee.com/pivovarit" target="_blank" rel="noopener" class="coffee-btn">Buy me a coffee</a>
+        <button type="button" class="coffee-dismiss" id="coffeeDismiss">No thanks</button>
+    </div>
+</div>
 
 <section class="seo-content container">
     <h2>How to Create an SMS QR Code</h2>
