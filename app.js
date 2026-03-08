@@ -99,15 +99,13 @@ const gradientOptions = document.getElementById('gradientOptions');
 const gradientFrom = document.getElementById('gradientFrom');
 const gradientTo = document.getElementById('gradientTo');
 
-function showFeedback(message, { duration = 2000, isError = false, link = null } = {}) {
-    if (link) {
-        copyFeedback.innerHTML = `<a href="${link}" target="_blank" rel="noopener" style="color: inherit; text-decoration: underline;">${message}</a>`;
-    } else {
-        copyFeedback.textContent = message;
-    }
+let feedbackTimer = null;
+function showFeedback(message, { duration = 2000, isError = false } = {}) {
+    clearTimeout(feedbackTimer);
+    copyFeedback.textContent = message;
     copyFeedback.classList.toggle('error', isError);
     copyFeedback.classList.add('visible');
-    setTimeout(() => {
+    feedbackTimer = setTimeout(() => {
         copyFeedback.classList.remove('visible', 'error');
     }, duration);
 }
@@ -293,17 +291,23 @@ function getExportCanvas() {
     return padded;
 }
 
-function showCoffeePrompt() {
-    if (sessionStorage.getItem('coffeeShown')) return;
-    sessionStorage.setItem('coffeeShown', '1');
+const coffeeOverlay = document.getElementById('coffeeOverlay');
+const coffeeStatus = document.getElementById('coffeeStatus');
+const coffeeDismiss = document.getElementById('coffeeDismiss');
 
-    setTimeout(() => {
-        showFeedback('Enjoying this tool? ☕ Buy me a coffee!', {
-            duration: 5000,
-            link: 'https://buymeacoffee.com/pivovarit'
-        });
-    }, 800);
+function showCoffeePopup(statusText) {
+    coffeeStatus.textContent = statusText;
+    coffeeOverlay.classList.add('visible');
 }
+
+function hideCoffeePopup() {
+    coffeeOverlay.classList.remove('visible');
+}
+
+coffeeDismiss.addEventListener('click', hideCoffeePopup);
+coffeeOverlay.addEventListener('click', (e) => {
+    if (e.target === coffeeOverlay) hideCoffeePopup();
+});
 
 downloadBtn.addEventListener('click', () => {
     const canvas = getExportCanvas();
@@ -313,7 +317,7 @@ downloadBtn.addEventListener('click', () => {
     link.download = 'qrcode.png';
     link.href = canvas.toDataURL('image/png');
     link.click();
-    showCoffeePrompt();
+    showCoffeePopup('QR code downloaded!');
 });
 
 copyBtn.addEventListener('click', async () => {
@@ -335,8 +339,7 @@ copyBtn.addEventListener('click', async () => {
             })
         });
         await navigator.clipboard.write([clipboardItem]);
-        showFeedback('Copied to clipboard!');
-        showCoffeePrompt();
+        showCoffeePopup('Copied to clipboard!');
     } catch (err) {
         console.error('Clipboard error:', err);
         showFeedback('Copy failed - try Download instead', { duration: 3000, isError: true });
@@ -360,7 +363,7 @@ shareBtn.addEventListener('click', async () => {
 
     try {
         await navigator.clipboard.writeText(shareUrl);
-        showFeedback('Link copied to clipboard!');
+        showCoffeePopup('Link copied to clipboard!');
     } catch {
         showFeedback('Could not copy link - clipboard access denied', { duration: 3000, isError: true });
     }

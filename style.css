@@ -1041,6 +1041,89 @@ footer a:hover {
     }
 }
 
+/* Coffee overlay */
+.coffee-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.coffee-overlay.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.coffee-modal {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 2.5rem 2rem;
+    max-width: 360px;
+    width: 90%;
+    text-align: center;
+    box-shadow: var(--shadow-lg);
+    transform: scale(0.9) translateY(20px);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.coffee-overlay.visible .coffee-modal {
+    transform: scale(1) translateY(0);
+}
+
+.coffee-status {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    margin: 0 0 1.25rem;
+}
+
+.coffee-message {
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 1.75rem;
+}
+
+.coffee-btn {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    padding: 0.875rem 2rem;
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: opacity 0.2s;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.coffee-btn:hover {
+    opacity: 0.9;
+}
+
+.coffee-dismiss {
+    display: block;
+    margin: 1rem auto 0;
+    background: none;
+    border: none;
+    color: var(--text-tertiary);
+    font-size: 0.85rem;
+    cursor: pointer;
+    padding: 0.5rem;
+}
+
+.coffee-dismiss:hover {
+    color: var(--text-secondary);
+}
+
 /* Embed mode - hide UI, show only QR code */
 body.embed-mode {
     background: transparent;
