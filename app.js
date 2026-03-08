@@ -92,8 +92,12 @@ const sizeValue = document.getElementById('sizeValue');
 const errorLevel = document.getElementById('errorLevel');
 const includeBorder = document.getElementById('includeBorder');
 
-function showFeedback(message, { duration = 2000, isError = false } = {}) {
-    copyFeedback.textContent = message;
+function showFeedback(message, { duration = 2000, isError = false, link = null } = {}) {
+    if (link) {
+        copyFeedback.innerHTML = `<a href="${link}" target="_blank" rel="noopener" style="color: inherit; text-decoration: underline;">${message}</a>`;
+    } else {
+        copyFeedback.textContent = message;
+    }
     copyFeedback.classList.toggle('error', isError);
     copyFeedback.classList.add('visible');
     setTimeout(() => {
@@ -229,7 +233,7 @@ function generateQRCode() {
         });
     } catch (err) {
         clearQRCode();
-        showFeedback('Text is too long for a QR code — try shorter input or lower error correction', { duration: 4000, isError: true });
+        showFeedback('Text is too long for a QR code - try shorter input or lower error correction', { duration: 4000, isError: true });
         return;
     }
 
@@ -255,6 +259,18 @@ function getExportCanvas() {
     return padded;
 }
 
+function showCoffeePrompt() {
+    if (sessionStorage.getItem('coffeeShown')) return;
+    sessionStorage.setItem('coffeeShown', '1');
+
+    setTimeout(() => {
+        showFeedback('Enjoying this tool? ☕ Buy me a coffee!', {
+            duration: 5000,
+            link: 'https://buymeacoffee.com/pivovarit'
+        });
+    }, 800);
+}
+
 downloadBtn.addEventListener('click', () => {
     const canvas = getExportCanvas();
     if (!canvas) return;
@@ -263,6 +279,7 @@ downloadBtn.addEventListener('click', () => {
     link.download = 'qrcode.png';
     link.href = canvas.toDataURL('image/png');
     link.click();
+    showCoffeePrompt();
 });
 
 copyBtn.addEventListener('click', async () => {
@@ -270,7 +287,7 @@ copyBtn.addEventListener('click', async () => {
     if (!canvas) return;
 
     if (!navigator.clipboard?.write || !window.ClipboardItem) {
-        showFeedback('Copy not supported in this browser — try Download instead', { duration: 3000, isError: true });
+        showFeedback('Copy not supported in this browser - try Download instead', { duration: 3000, isError: true });
         return;
     }
 
@@ -285,9 +302,10 @@ copyBtn.addEventListener('click', async () => {
         });
         await navigator.clipboard.write([clipboardItem]);
         showFeedback('Copied to clipboard!');
+        showCoffeePrompt();
     } catch (err) {
         console.error('Clipboard error:', err);
-        showFeedback('Copy failed — try Download instead', { duration: 3000, isError: true });
+        showFeedback('Copy failed - try Download instead', { duration: 3000, isError: true });
     }
 });
 
@@ -310,7 +328,7 @@ shareBtn.addEventListener('click', async () => {
         await navigator.clipboard.writeText(shareUrl);
         showFeedback('Link copied to clipboard!');
     } catch {
-        showFeedback('Could not copy link — clipboard access denied', { duration: 3000, isError: true });
+        showFeedback('Could not copy link - clipboard access denied', { duration: 3000, isError: true });
     }
 });
 
