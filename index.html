@@ -17,12 +17,17 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-1085VCHG37"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-1085VCHG37');
+        window.addEventListener('load', function() {
+            var s = document.createElement('script');
+            s.src = 'https://www.googletagmanager.com/gtag/js?id=G-1085VCHG37';
+            s.async = true;
+            document.head.appendChild(s);
+            gtag('js', new Date());
+            gtag('config', 'G-1085VCHG37');
+        });
     </script>
     <style>
         :root {
