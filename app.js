@@ -74,6 +74,7 @@ const presets = {
 };
 
 const presetSelect = document.getElementById('presetSelect');
+const currentPreset = () => presetSelect ? presetSelect.value : 'text';
 const inputGroup = document.getElementById('inputGroup');
 const qrContainer = document.getElementById('qrcode');
 const qrFrame = document.getElementById('qrFrame');
@@ -197,7 +198,7 @@ function createInputFields(presetKey) {
 }
 
 function collectFormValues() {
-    const preset = presets[presetSelect.value];
+    const preset = presets[currentPreset()];
     const values = {};
     preset.fields.forEach(field => {
         const el = document.getElementById(field.id);
@@ -207,7 +208,7 @@ function collectFormValues() {
 }
 
 function isFormValid() {
-    const preset = presets[presetSelect.value];
+    const preset = presets[currentPreset()];
     const values = collectFormValues();
 
     const firstField = preset.fields[0];
@@ -229,12 +230,14 @@ function clearQRCode() {
     actionButtons.classList.remove('visible');
 }
 
-presetSelect.addEventListener('change', () => {
-    createInputFields(presetSelect.value);
-});
+if (presetSelect) {
+    presetSelect.addEventListener('change', () => {
+        createInputFields(presetSelect.value);
+    });
+}
 
 function generateQRCode() {
-    const preset = presets[presetSelect.value];
+    const preset = presets[currentPreset()];
     const values = collectFormValues();
     const text = preset.format(values);
 
@@ -341,7 +344,7 @@ copyBtn.addEventListener('click', async () => {
 });
 
 shareBtn.addEventListener('click', async () => {
-    const preset = presets[presetSelect.value];
+    const preset = presets[currentPreset()];
     const values = collectFormValues();
     const text = preset.format(values);
     if (!text) return;
@@ -365,11 +368,11 @@ shareBtn.addEventListener('click', async () => {
 
 const pathSegments = window.location.pathname.split('/').filter(Boolean);
 const pathPreset = (pathSegments.pop() || '').replace(/\.html?$/, '').toLowerCase();
-if (pathPreset && presets[pathPreset]) {
+if (pathPreset && presets[pathPreset] && presetSelect) {
     presetSelect.value = pathPreset;
     presetSelect.closest('.card').style.display = 'none';
 }
-createInputFields(presetSelect.value);
+createInputFields(currentPreset());
 
 function initFromUrlParams() {
     const params = new URLSearchParams(window.location.search);
