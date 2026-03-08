@@ -74,7 +74,10 @@ const presets = {
 };
 
 const presetSelect = document.getElementById('presetSelect');
-const currentPreset = () => presetSelect ? presetSelect.value : 'text';
+const pathSegments = window.location.pathname.split('/').filter(Boolean);
+const pathPreset = (pathSegments.pop() || '').replace(/\.html?$/, '').toLowerCase();
+const fixedPreset = (pathPreset && presets[pathPreset]) ? pathPreset : null;
+const currentPreset = () => fixedPreset || (presetSelect ? presetSelect.value : 'text');
 const inputGroup = document.getElementById('inputGroup');
 const qrContainer = document.getElementById('qrcode');
 const qrFrame = document.getElementById('qrFrame');
@@ -369,12 +372,6 @@ shareBtn.addEventListener('click', async () => {
     }
 });
 
-const pathSegments = window.location.pathname.split('/').filter(Boolean);
-const pathPreset = (pathSegments.pop() || '').replace(/\.html?$/, '').toLowerCase();
-if (pathPreset && presets[pathPreset] && presetSelect) {
-    presetSelect.value = pathPreset;
-    presetSelect.closest('.card').style.display = 'none';
-}
 createInputFields(currentPreset());
 
 function initFromUrlParams() {
