@@ -91,7 +91,8 @@ const sizeSlider = document.getElementById('sizeSlider');
 const sizeValue = document.getElementById('sizeValue');
 const errorLevel = document.getElementById('errorLevel');
 const includeBorder = document.getElementById('includeBorder');
-const moduleStyle = document.getElementById('moduleStyle');
+const styleSwitch = document.getElementById('styleSwitch');
+let currentStyle = 'classic';
 const gradientToggle = document.getElementById('gradientToggle');
 const gradientOptions = document.getElementById('gradientOptions');
 const gradientFrom = document.getElementById('gradientFrom');
@@ -140,7 +141,14 @@ function refreshQRCode() {
 fgColor.addEventListener('input', refreshQRCode);
 bgColor.addEventListener('input', refreshQRCode);
 errorLevel.addEventListener('change', refreshQRCode);
-moduleStyle.addEventListener('change', refreshQRCode);
+styleSwitch.addEventListener('click', (e) => {
+    const btn = e.target.closest('.style-option');
+    if (!btn || btn.dataset.style === currentStyle) return;
+    styleSwitch.querySelector('.active').classList.remove('active');
+    btn.classList.add('active');
+    currentStyle = btn.dataset.style;
+    refreshQRCode();
+});
 gradientToggle.addEventListener('change', () => {
     gradientOptions.style.display = gradientToggle.checked ? 'flex' : 'none';
     refreshQRCode();
@@ -217,6 +225,7 @@ function regenerateIfValid() {
 function clearQRCode() {
     qrContainer.innerHTML = '';
     qrFrame.classList.remove('visible');
+    styleSwitch.classList.remove('visible');
     actionButtons.classList.remove('visible');
 }
 
@@ -242,7 +251,7 @@ function generateQRCode() {
             colorDark: fgColor.value,
             colorLight: bgColor.value,
             correctLevel: ERROR_LEVELS[errorLevel.value],
-            style: moduleStyle.value
+            style: currentStyle
         };
         if (gradientToggle.checked) {
             qrOptions.gradient = {
@@ -260,6 +269,7 @@ function generateQRCode() {
 
     if (document.querySelector('#qrcode canvas')) {
         qrFrame.classList.add('visible');
+        styleSwitch.classList.add('visible');
         actionButtons.classList.add('visible');
     }
 }

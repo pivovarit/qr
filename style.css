@@ -766,6 +766,46 @@ footer a:hover {
     border-color: var(--accent);
 }
 
+.style-switch {
+    display: none;
+    justify-content: center;
+    gap: 0;
+    margin-top: 1rem;
+    background: var(--bg-glass);
+    border: 1px solid var(--border-subtle);
+    border-radius: 20px;
+    padding: 3px;
+    width: fit-content;
+    align-self: center;
+}
+
+.style-switch.visible {
+    display: flex;
+}
+
+.style-option {
+    padding: 0.35rem 1rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    font-family: inherit;
+    color: var(--text-muted);
+    background: transparent;
+    border: none;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.style-option:hover {
+    color: var(--text-secondary);
+}
+
+.style-option.active {
+    background: var(--accent);
+    color: #fff;
+    box-shadow: var(--shadow-sm);
+}
+
 .gradient-colors {
     display: flex;
     align-items: center;
