@@ -91,7 +91,7 @@ body {
     padding: 2rem;
     transition: color 0.3s ease;
     position: relative;
-    overflow: hidden;
+    overflow-x: hidden;
 }
 
 body.dark {
