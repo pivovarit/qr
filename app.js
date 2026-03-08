@@ -314,7 +314,12 @@ shareBtn.addEventListener('click', async () => {
     }
 });
 
-createInputFields('text');
+const pathSegments = window.location.pathname.split('/').filter(Boolean);
+const pathPreset = (pathSegments.pop() || '').replace(/\.html?$/, '').toLowerCase();
+if (pathPreset && presets[pathPreset]) {
+    presetSelect.value = pathPreset;
+}
+createInputFields(presetSelect.value);
 
 function initFromUrlParams() {
     const params = new URLSearchParams(window.location.search);

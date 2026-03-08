@@ -4,16 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data:; font-src https://fonts.gstatic.com; connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com;">
-    <title>QR Code Generator</title>
-    <meta name="description" content="Free, private QR code generator. Create QR codes for URLs, WiFi, contacts, email, and more. No tracking, no ads, runs entirely in your browser." />
-    <meta property="og:title" content="QR Code Generator" />
-    <meta property="og:description" content="Free, private QR code generator. Create QR codes for URLs, WiFi, contacts, email, and more." />
+    <title>Free Phone Number QR Code Generator — One Scan to Dial</title>
+    <meta name="description" content="Generate a QR code for a phone number. One scan to dial — perfect for business cards, flyers, and storefronts. Free, private, no signup." />
+    <meta property="og:title" content="Free Phone Number QR Code Generator" />
+    <meta property="og:description" content="Generate a QR code for a phone number. One scan to dial — perfect for business cards, flyers, and storefronts." />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="favicon.svg" />
+    <meta property="og:image" content="../favicon.svg" />
     <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="QR Code Generator" />
-    <meta name="twitter:description" content="Free, private QR code generator. Create QR codes for URLs, WiFi, contacts, email, and more." />
-    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <meta name="twitter:title" content="Free Phone Number QR Code Generator" />
+    <meta name="twitter:description" content="Generate a QR code for a phone number. One scan to dial — perfect for business cards, flyers, and storefronts." />
+    <link rel="canonical" href="../phone/" />
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -29,7 +30,7 @@
             gtag('config', 'G-1085VCHG37');
         });
     </script>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../style.css">
 </head>
 <body class="dark">
 
@@ -39,8 +40,8 @@
 
 <div class="container">
     <div class="header">
-        <h1>QR Code Generator</h1>
-        <p class="subtitle">Create beautiful QR codes instantly</p>
+        <h1>Phone Number QR Code Generator</h1>
+        <p class="subtitle">Create a QR code for a phone number — one scan to dial</p>
     </div>
 
     <div class="main-layout">
@@ -71,7 +72,7 @@
                         <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
                     </svg>
                     <span>Options</span>
-                    <span class="arrow">▼</span>
+                    <span class="arrow">&#9660;</span>
                 </button>
             </div>
 
@@ -114,15 +115,15 @@
                 </div>
                 <div class="action-buttons" id="actionButtons">
                     <button class="action-btn" id="downloadBtn">
-                        <span class="icon">📥</span>
+                        <span class="icon">&#128229;</span>
                         <span>Download</span>
                     </button>
                     <button class="action-btn" id="copyBtn">
-                        <span class="icon">📋</span>
+                        <span class="icon">&#128203;</span>
                         <span>Copy</span>
                     </button>
                     <button class="action-btn" id="shareBtn">
-                        <span class="icon">🔗</span>
+                        <span class="icon">&#128279;</span>
                         <span>Share</span>
                     </button>
                 </div>
@@ -134,10 +135,10 @@
 <div class="copy-feedback" id="copyFeedback">Copied to clipboard!</div>
 
 <footer>
-    <div class="footer-main">Made with ☕ by <a href="https://github.com/sponsors/pivovarit" target="_blank" rel="noopener">pivovarit</a> — <a href="https://github.com/sponsors/pivovarit" target="_blank" rel="noopener">Support on GitHub Sponsors</a> — <a href="https://buymeacoffee.com/pivovarit" target="_blank" rel="noopener">Buy Me a Coffee</a></div>
+    <div class="footer-main">Made with &#9749; by <a href="https://github.com/sponsors/pivovarit" target="_blank" rel="noopener">pivovarit</a> — <a href="https://github.com/sponsors/pivovarit" target="_blank" rel="noopener">Support on GitHub Sponsors</a> — <a href="https://buymeacoffee.com/pivovarit" target="_blank" rel="noopener">Buy Me a Coffee</a></div>
 </footer>
 
-<script src="qr.js"></script>
-<script src="app.js"></script>
+<script src="../qr.js"></script>
+<script src="../app.js"></script>
 </body>
 </html>
