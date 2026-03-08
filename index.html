@@ -84,12 +84,32 @@
 
             <div class="customization-panel" id="panelContent">
                 <div class="option-row">
+                    <label for="moduleStyle">Style</label>
+                    <select id="moduleStyle">
+                        <option value="classic">Classic</option>
+
+                        <option value="dots">Dots</option>
+                    </select>
+                </div>
+                <div class="option-row">
                     <label for="fgColor">Foreground</label>
                     <input type="color" id="fgColor" value="#000000" />
                 </div>
                 <div class="option-row">
                     <label for="bgColor">Background</label>
                     <input type="color" id="bgColor" value="#ffffff" />
+                </div>
+                <div class="option-row">
+                    <label for="gradientToggle">Gradient</label>
+                    <input type="checkbox" id="gradientToggle" />
+                </div>
+                <div class="option-row gradient-options" id="gradientOptions" style="display: none;">
+                    <label for="gradientFrom">Gradient</label>
+                    <div class="gradient-colors">
+                        <input type="color" id="gradientFrom" value="#667eea" />
+                        <span class="gradient-arrow">→</span>
+                        <input type="color" id="gradientTo" value="#764ba2" />
+                    </div>
                 </div>
                 <div class="option-row">
                     <label for="sizeSlider">Size</label>

@@ -574,11 +574,19 @@
         };
     }
 
+    function isFinderRegion(r, c, size) {
+        return (r < 7 && c < 7) ||
+               (r < 7 && c >= size - 7) ||
+               (r >= size - 7 && c < 7);
+    }
+
     function renderToCanvas(container, text, options = {}) {
         const width = options.width || 256;
         const height = options.height || 256;
         const colorDark = options.colorDark || '#000000';
         const colorLight = options.colorLight || '#ffffff';
+        const style = options.style || 'classic';
+        const gradient = options.gradient || null;
 
         const qr = generate(text, options);
         const canvasSize = Math.min(width, height);
@@ -593,14 +601,59 @@
         ctx.fillStyle = colorLight;
         ctx.fillRect(0, 0, width, height);
 
-        ctx.fillStyle = colorDark;
+        let fill;
+        if (gradient) {
+            const x0 = offset;
+            const y0 = offset;
+            const x1 = offset + qr.size * moduleSize;
+            const y1 = offset + qr.size * moduleSize;
+            if (gradient.type === 'radial') {
+                const cx = (x0 + x1) / 2;
+                const cy = (y0 + y1) / 2;
+                const radius = Math.sqrt((x1 - x0) * (x1 - x0) + (y1 - y0) * (y1 - y0)) / 2;
+                fill = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius);
+            } else {
+                fill = ctx.createLinearGradient(x0, y0, x1, y1);
+            }
+            fill.addColorStop(0, gradient.from);
+            fill.addColorStop(1, gradient.to);
+        } else {
+            fill = colorDark;
+        }
+        ctx.fillStyle = fill;
+
         for (let r = 0; r < qr.size; r++) {
             for (let c = 0; c < qr.size; c++) {
-                if (qr.matrix[r][c] === 1) {
-                    const x = Math.round(offset + c * moduleSize);
-                    const y = Math.round(offset + r * moduleSize);
-                    const w = Math.round(offset + (c + 1) * moduleSize) - x;
-                    const h = Math.round(offset + (r + 1) * moduleSize) - y;
+                if (qr.matrix[r][c] !== 1) continue;
+
+                const x = Math.round(offset + c * moduleSize);
+                const y = Math.round(offset + r * moduleSize);
+                const w = Math.round(offset + (c + 1) * moduleSize) - x;
+                const h = Math.round(offset + (r + 1) * moduleSize) - y;
+
+                const useClassic = isFinderRegion(r, c, qr.size);
+
+                if (style === 'dots' && !useClassic) {
+                    const cx = x + w / 2;
+                    const cy = y + h / 2;
+                    const radius = Math.min(w, h) / 2 * 0.85;
+                    ctx.beginPath();
+                    ctx.arc(cx, cy, radius, 0, 2 * Math.PI);
+                    ctx.fill();
+                } else if (style === 'rounded' && !useClassic) {
+                    const radius = Math.min(w, h) * 0.35;
+                    ctx.beginPath();
+                    ctx.moveTo(x + radius, y);
+                    ctx.lineTo(x + w - radius, y);
+                    ctx.quadraticCurveTo(x + w, y, x + w, y + radius);
+                    ctx.lineTo(x + w, y + h - radius);
+                    ctx.quadraticCurveTo(x + w, y + h, x + w - radius, y + h);
+                    ctx.lineTo(x + radius, y + h);
+                    ctx.quadraticCurveTo(x, y + h, x, y + h - radius);
+                    ctx.lineTo(x, y + radius);
+                    ctx.quadraticCurveTo(x, y, x + radius, y);
+                    ctx.fill();
+                } else {
                     ctx.fillRect(x, y, w, h);
                 }
             }

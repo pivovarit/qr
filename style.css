@@ -384,7 +384,7 @@ textarea {
 }
 
 .customization-panel.expanded {
-    max-height: 300px;
+    max-height: 500px;
     padding: 1rem 1.25rem;
     margin-bottom: 1rem;
     border-color: var(--border-color);
@@ -764,6 +764,17 @@ footer a:hover {
 .cross-links a:hover {
     background: var(--accent-light);
     border-color: var(--accent);
+}
+
+.gradient-colors {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.gradient-arrow {
+    color: var(--text-muted);
+    font-size: 0.8rem;
 }
 
 .seo-content {

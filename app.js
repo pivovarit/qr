@@ -91,6 +91,11 @@ const sizeSlider = document.getElementById('sizeSlider');
 const sizeValue = document.getElementById('sizeValue');
 const errorLevel = document.getElementById('errorLevel');
 const includeBorder = document.getElementById('includeBorder');
+const moduleStyle = document.getElementById('moduleStyle');
+const gradientToggle = document.getElementById('gradientToggle');
+const gradientOptions = document.getElementById('gradientOptions');
+const gradientFrom = document.getElementById('gradientFrom');
+const gradientTo = document.getElementById('gradientTo');
 
 function showFeedback(message, { duration = 2000, isError = false, link = null } = {}) {
     if (link) {
@@ -135,6 +140,13 @@ function refreshQRCode() {
 fgColor.addEventListener('input', refreshQRCode);
 bgColor.addEventListener('input', refreshQRCode);
 errorLevel.addEventListener('change', refreshQRCode);
+moduleStyle.addEventListener('change', refreshQRCode);
+gradientToggle.addEventListener('change', () => {
+    gradientOptions.style.display = gradientToggle.checked ? 'flex' : 'none';
+    refreshQRCode();
+});
+gradientFrom.addEventListener('input', refreshQRCode);
+gradientTo.addEventListener('input', refreshQRCode);
 
 function createInputFields(presetKey) {
     const preset = presets[presetKey];
@@ -223,14 +235,23 @@ function generateQRCode() {
 
     qrContainer.innerHTML = '';
     try {
-        new QRCode(qrContainer, {
+        const qrOptions = {
             text: text,
             width: size,
             height: size,
             colorDark: fgColor.value,
             colorLight: bgColor.value,
-            correctLevel: ERROR_LEVELS[errorLevel.value]
-        });
+            correctLevel: ERROR_LEVELS[errorLevel.value],
+            style: moduleStyle.value
+        };
+        if (gradientToggle.checked) {
+            qrOptions.gradient = {
+                type: 'linear',
+                from: gradientFrom.value,
+                to: gradientTo.value
+            };
+        }
+        new QRCode(qrContainer, qrOptions);
     } catch (err) {
         clearQRCode();
         showFeedback('Text is too long for a QR code - try shorter input or lower error correction', { duration: 4000, isError: true });
