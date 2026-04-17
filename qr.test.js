@@ -245,4 +245,118 @@ describe('golden output tests', () => {
             '111111101111011000000',
         ].join('\n'));
     });
+
+    it('produces known matrix for a short URL at V2 ECL L (one alignment pattern)', () => {
+        const qr = generate('https://example.com/a', { correctLevel: CorrectLevel.L });
+        assert.equal(qr.version, 2);
+        assert.equal(qr.size, 25);
+
+        const snapshot = qr.matrix.map(row => row.join('')).join('\n');
+        assert.equal(snapshot, [
+            '1111111011101011101111111',
+            '1000001011100000101000001',
+            '1011101010110010101011101',
+            '1011101011010111101011101',
+            '1011101000000011101011101',
+            '1000001010011100001000001',
+            '1111111010101010101111111',
+            '0000000001001010000000000',
+            '1100111000010011000101111',
+            '1011010001101011010011010',
+            '0010001010011111011101100',
+            '1101100100110011010100110',
+            '0000011110101000011101111',
+            '1111000101000111100010010',
+            '0011111000000001110111100',
+            '0000010101101011000110110',
+            '1100011011110111111111100',
+            '0000000010101010100010000',
+            '1111111000011110101010000',
+            '1000001011010100100011100',
+            '1011101011101100111111111',
+            '1011101001000110011100111',
+            '1011101000100001111001010',
+            '1000001011001010001111110',
+            '1111111011110111011000111',
+        ].join('\n'));
+    });
+
+    it('produces known matrix at V10 ECL H (multiple alignment patterns)', () => {
+        const qr = generate('X'.repeat(100), { correctLevel: CorrectLevel.H });
+        assert.equal(qr.version, 10);
+        assert.equal(qr.size, 57);
+
+        const first = qr.matrix[0].join('');
+        assert.equal(first, '111111100110100110000010111110101111001001111011001111111');
+        const last = qr.matrix[qr.size - 1].join('');
+        assert.equal(last, '111111100010010010011100001011010111011110001000001011101');
+    });
+
+    it('produces known matrix at V15 ECL L (large, many alignment patterns)', () => {
+        const qr = generate('Y'.repeat(500), { correctLevel: CorrectLevel.L });
+        assert.equal(qr.version, 15);
+        assert.equal(qr.size, 77);
+
+        const first = qr.matrix[0].join('');
+        assert.equal(first, '11111110101101001101010100101010101010101010100101011101110111011100001111111');
+        const last = qr.matrix[qr.size - 1].join('');
+        assert.equal(last, '11111110101101011011010100101010101010101010101101010111011101110110101100101');
+    });
+});
+
+describe('alignment patterns', () => {
+    function hasAlignmentCenter(matrix, cr, cc) {
+        if (matrix[cr][cc] !== 1) return false;
+        for (let r = -2; r <= 2; r++) {
+            for (let c = -2; c <= 2; c++) {
+                if (r === 0 && c === 0) continue;
+                const onBorder = Math.abs(r) === 2 || Math.abs(c) === 2;
+                const expected = onBorder ? 1 : 0;
+                if (matrix[cr + r][cc + c] !== expected) return false;
+            }
+        }
+        return true;
+    }
+
+    it('places alignment pattern at (18,18) for V2', () => {
+        const qr = generate('https://example.com/a', { correctLevel: CorrectLevel.L });
+        assert.equal(qr.version, 2);
+        assert.ok(hasAlignmentCenter(qr.matrix, 18, 18),
+            'alignment pattern expected at (18,18) for version 2');
+    });
+
+    it('places alignment patterns at all V7 spec positions', () => {
+        const qr = generate('Z'.repeat(60), { correctLevel: CorrectLevel.H });
+        assert.equal(qr.version, 7);
+        // ALIGNMENT_PATTERNS[7] = [6, 22, 38]; corners that collide with finder patterns
+        // (6,6), (6,38), (38,6) are skipped by the encoder — test only the placed ones.
+        const positions = [[6, 22], [22, 6], [22, 22], [22, 38], [38, 22], [38, 38]];
+        for (const [r, c] of positions) {
+            assert.ok(hasAlignmentCenter(qr.matrix, r, c),
+                `alignment pattern missing or malformed at (${r},${c})`);
+        }
+    });
+});
+
+describe('version selection monotonicity', () => {
+    it('version does not decrease as data length increases (ECL L)', () => {
+        let prev = 0;
+        for (let len = 1; len <= 2000; len += 50) {
+            const qr = generate('A'.repeat(len), { correctLevel: CorrectLevel.L });
+            assert.ok(qr.version >= prev, `version regressed at len=${len}: ${prev} -> ${qr.version}`);
+            prev = qr.version;
+        }
+    });
+
+    it('finder patterns remain intact at V15', () => {
+        const qr = generate('Y'.repeat(500), { correctLevel: CorrectLevel.L });
+        assert.equal(qr.version, 15);
+        const s = qr.size;
+        // top-left, top-right, bottom-left outer ring all 1s
+        for (let c = 0; c < 7; c++) {
+            assert.equal(qr.matrix[0][c], 1);
+            assert.equal(qr.matrix[0][s - 7 + c], 1);
+            assert.equal(qr.matrix[s - 1][c], 1);
+        }
+    });
 });

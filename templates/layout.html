@@ -4,17 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data:; font-src https://fonts.gstatic.com; connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com;">
-    <title>Free Email QR Code Generator | One Scan to Send an Email</title>
-    <meta name="description" content="Generate a QR code that opens a pre-filled email. Perfect for feedback forms, business cards, and contact points. Free, private, no signup." />
-    <meta property="og:title" content="Free Email QR Code Generator" />
-    <meta property="og:description" content="Generate a QR code that opens a pre-filled email. Perfect for feedback forms, business cards, and contact points." />
+    <title>{{title}}</title>
+    <meta name="description" content="{{description}}" />
+    <meta property="og:title" content="{{shortTitle}}" />
+    <meta property="og:description" content="{{ogDescription}}" />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="../favicon.svg" />
+    <meta property="og:image" content="{{faviconPath}}" />
     <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="Free Email QR Code Generator" />
-    <meta name="twitter:description" content="Generate a QR code that opens a pre-filled email. Perfect for feedback forms, business cards, and contact points." />
-    <link rel="canonical" href="https://qr.pivovarit.com/email/" />
-    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <meta name="twitter:title" content="{{shortTitle}}" />
+    <meta name="twitter:description" content="{{ogDescription}}" />
+    <link rel="canonical" href="{{canonical}}" />
+    <link rel="icon" type="image/svg+xml" href="{{faviconPath}}" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -30,19 +30,7 @@
             gtag('config', 'G-1085VCHG37');
         });
     </script>
-    <link rel="stylesheet" href="../style.css">
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "WebApplication",
-        "name": "Free Email QR Code Generator",
-        "description": "Generate a QR code that opens a pre-filled email. Perfect for feedback forms, business cards, and contact points.",
-        "applicationCategory": "UtilitiesApplication",
-        "operatingSystem": "Any",
-        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-        "browserRequirements": "Requires a modern web browser"
-    }
-    </script>
+    <link rel="stylesheet" href="{{stylePath}}">{{schemaBlock}}
 </head>
 <body class="dark">
 
@@ -52,8 +40,8 @@
 
 <div class="container">
     <div class="header">
-        <h1>Email QR Code Generator</h1>
-        <p class="subtitle">Create a QR code that opens a pre-filled email. No signup, no paywall, no nonsense.</p>
+        <h1>{{h1}}</h1>
+        <p class="subtitle">{{subtitle}}</p>
         <div class="trust-badges">
             <span class="trust-badge">100% Free</span>
             <span class="trust-badge">No Signup</span>
@@ -165,34 +153,13 @@
     </div>
 </div>
 
-<section class="seo-content container">
-    <h2>How to Create an Email QR Code</h2>
-    <p>Generate a QR code that opens a new email with the recipient, subject, and body pre-filled. Enter the details above and your code is ready instantly.</p>
-    <p>When someone scans the code, their default email app opens with your message ready to send. No copying addresses, no typos.</p>
-    <h3>Perfect for</h3>
-    <ul>
-        <li><strong>Business cards &amp; flyers:</strong> one scan to reach you by email</li>
-        <li><strong>Feedback forms:</strong> place on receipts, packaging, or in-store displays</li>
-        <li><strong>Customer support:</strong> print on product manuals or warranty cards</li>
-        <li><strong>Event follow-ups:</strong> pre-fill the subject line for easy sorting</li>
-    </ul>
-    <p>Runs entirely in your browser. No data is stored or sent anywhere.</p>
-</section>
-
-<nav class="cross-links container">
-    <span class="cross-links-label">Also available:</span>
-    <a href="/">Text / URL QR</a>
-    <a href="/wifi/">WiFi QR</a>
-    <a href="/vcard/">vCard QR</a>
-    <a href="/sms/">SMS QR</a>
-    <a href="/phone/">Phone QR</a>
-</nav>
+{{seoContentBlock}}{{crossLinks}}
 
 <footer>
     <div class="footer-main"><a href="https://github.com/sponsors/pivovarit" target="_blank" rel="noopener">Support on GitHub Sponsors</a> | <a href="https://buymeacoffee.com/pivovarit" target="_blank" rel="noopener">Buy Me a Coffee</a></div>
 </footer>
 
-<script src="../qr.js"></script>
-<script src="../app.js"></script>
+<script src="{{qrScriptPath}}"></script>
+<script src="{{appScriptPath}}"></script>
 </body>
 </html>

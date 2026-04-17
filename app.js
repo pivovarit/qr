@@ -125,10 +125,6 @@ panelHeader.addEventListener('click', () => {
     panelContent.classList.toggle('expanded');
 });
 
-panelHeader.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') e.preventDefault();
-});
-
 sizeSlider.addEventListener('input', () => {
     sizeValue.textContent = sizeSlider.value + 'px';
     refreshQRCode();
@@ -237,11 +233,7 @@ if (presetSelect) {
     });
 }
 
-function generateQRCode() {
-    const preset = presets[currentPreset()];
-    const values = collectFormValues();
-    const text = preset.format(values);
-
+function renderQRFromText(text) {
     if (!text) return;
 
     const size = parseInt(sizeSlider.value);
@@ -276,6 +268,12 @@ function generateQRCode() {
         styleSwitch.classList.add('visible');
         actionButtons.classList.add('visible');
     }
+}
+
+function generateQRCode() {
+    const preset = presets[currentPreset()];
+    const values = collectFormValues();
+    renderQRFromText(preset.format(values));
 }
 
 function getExportCanvas() {
@@ -416,10 +414,12 @@ function initFromUrlParams() {
     if (textInput) {
         textInput.value = urlParam;
         generateQRCode();
+    } else {
+        renderQRFromText(urlParam);
+    }
 
-        if (isEmbed && hasBorder) {
-            qrContainer.style.backgroundColor = bgColor.value;
-        }
+    if (isEmbed && hasBorder) {
+        qrContainer.style.backgroundColor = bgColor.value;
     }
 }
 
