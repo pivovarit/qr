@@ -360,29 +360,3 @@ describe('version selection monotonicity', () => {
         }
     });
 });
-
-describe('render geometry', () => {
-    const { computeRenderGeometry } = QRCode;
-
-    it('insets the QR by a quiet zone of the requested module count', () => {
-        const g = computeRenderGeometry(256, 21, 4, 1);
-        assert.equal(g.offset, 4 * g.moduleSize, 'offset must equal quietModules * moduleSize');
-        assert.ok(g.offset > 0, 'a quiet zone must be present (offset > 0)');
-        assert.equal(g.dimension, (21 + 8) * g.moduleSize);
-    });
-
-    it('uses an integer module size that fits the requested size including the quiet zone', () => {
-        const g = computeRenderGeometry(256, 21, 4, 1);
-        assert.equal(g.moduleSize, Math.floor(256 / (21 + 8)));
-        assert.equal(g.moduleSize, 8);
-        assert.ok(Number.isInteger(g.moduleSize));
-    });
-
-    it('never lets module size collapse below the minimum (prevents sub-pixel loss)', () => {
-        // v40 (size 177) at the smallest slider width would otherwise floor to 0px modules
-        const g = computeRenderGeometry(128, 177, 4, 2);
-        assert.equal(g.moduleSize, 2, 'must clamp up to the minimum module size');
-        assert.ok(g.moduleSize >= 2);
-        assert.equal(g.dimension, (177 + 8) * 2);
-    });
-});

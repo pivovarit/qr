@@ -63,6 +63,7 @@ function render(page) {
         canonical,
         faviconPath: prefix + 'favicon.svg',
         stylePath: prefix + 'style.css',
+        ogImage: SITE_ORIGIN + '/og.png',
         qrScriptPath: prefix + 'qr.js',
         presetsScriptPath: prefix + 'presets.js',
         appScriptPath: prefix + 'app.js',
@@ -95,4 +96,8 @@ function build() {
     }
 }
 
-build();
+if (require.main === module) {
+    build();
+}
+
+module.exports = { render, pages, build, SITE_ORIGIN };
