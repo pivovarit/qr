@@ -580,6 +580,23 @@
                (r >= size - 7 && c < 7);
     }
 
+    // Compute the pixel geometry for rendering a QR of `qrSize` modules into a
+    // square of `requestedSize` px. Reserves a `quietModules`-wide light border
+    // (the spec requires 4) and never lets a module shrink below `minModulePx`,
+    // so long codes at small sizes stay scannable instead of losing sub-pixel
+    // columns to rounding. The backing raster may exceed requestedSize; callers
+    // scale it down for display via CSS.
+    function computeRenderGeometry(requestedSize, qrSize, quietModules, minModulePx) {
+        const totalModules = qrSize + quietModules * 2;
+        const moduleSize = Math.max(minModulePx, Math.floor(requestedSize / totalModules));
+        return {
+            moduleSize,
+            offset: quietModules * moduleSize,
+            dimension: totalModules * moduleSize,
+            quietModules
+        };
+    }
+
     function renderToCanvas(container, text, options = {}) {
         const width = options.width || 256;
         const height = options.height || 256;
@@ -589,17 +606,20 @@
         const gradient = options.gradient || null;
 
         const qr = generate(text, options);
-        const canvasSize = Math.min(width, height);
-        const moduleSize = canvasSize / qr.size;
-        const offset = (canvasSize - moduleSize * qr.size) / 2;
+        const quietModules = options.quietZone !== undefined ? options.quietZone : 4;
+        const minModulePx = options.minModuleSize !== undefined ? options.minModuleSize : 2;
+        const requestedSize = Math.min(width, height);
+        const {moduleSize, offset, dimension} = computeRenderGeometry(requestedSize, qr.size, quietModules, minModulePx);
 
         const canvas = document.createElement('canvas');
-        canvas.width = width;
-        canvas.height = height;
+        canvas.width = dimension;
+        canvas.height = dimension;
+        canvas.style.width = requestedSize + 'px';
+        canvas.style.height = requestedSize + 'px';
         const ctx = canvas.getContext('2d');
 
         ctx.fillStyle = colorLight;
-        ctx.fillRect(0, 0, width, height);
+        ctx.fillRect(0, 0, dimension, dimension);
 
         let fill;
         if (gradient) {
@@ -676,6 +696,7 @@
     QRCode.CorrectLevel = ECL;
     QRCode.generate = generate;
     QRCode.renderToCanvas = renderToCanvas;
+    QRCode.computeRenderGeometry = computeRenderGeometry;
 
     global.QRCode = QRCode;
 

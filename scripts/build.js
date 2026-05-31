@@ -64,6 +64,7 @@ function render(page) {
         faviconPath: prefix + 'favicon.svg',
         stylePath: prefix + 'style.css',
         qrScriptPath: prefix + 'qr.js',
+        presetsScriptPath: prefix + 'presets.js',
         appScriptPath: prefix + 'app.js',
         schemaBlock: schemaBlock(page),
         seoContentBlock: seoContentBlock(page),
