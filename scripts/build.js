@@ -66,6 +66,7 @@ function render(page) {
         ogImage: SITE_ORIGIN + '/og.png',
         qrScriptPath: prefix + 'qr.js',
         presetsScriptPath: prefix + 'presets.js',
+        shareScriptPath: prefix + 'share.js',
         appScriptPath: prefix + 'app.js',
         schemaBlock: schemaBlock(page),
         seoContentBlock: seoContentBlock(page),

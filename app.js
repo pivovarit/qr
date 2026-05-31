@@ -280,14 +280,19 @@ shareBtn.addEventListener('click', async () => {
     const text = preset.format(values);
     if (!text) return;
 
-    const params = new URLSearchParams();
-    params.set('url', text);
-    if (fgColor.value !== '#000000') params.set('fg', fgColor.value.slice(1));
-    if (bgColor.value !== '#ffffff') params.set('bg', bgColor.value.slice(1));
-    if (sizeSlider.value !== '256') params.set('size', sizeSlider.value);
-    if (errorLevel.value !== 'H') params.set('ecl', errorLevel.value);
+    const query = QRShare.buildShareQuery({
+        text,
+        fg: fgColor.value,
+        bg: bgColor.value,
+        size: sizeSlider.value,
+        ecl: errorLevel.value,
+        style: currentStyle,
+        gradient: gradientToggle.checked
+            ? { enabled: true, from: gradientFrom.value, to: gradientTo.value }
+            : null
+    });
 
-    const shareUrl = window.location.origin + window.location.pathname + '?' + params.toString();
+    const shareUrl = window.location.origin + window.location.pathname + '?' + query;
 
     try {
         await navigator.clipboard.writeText(shareUrl);
@@ -335,6 +340,23 @@ function initFromUrlParams() {
         if (['L', 'M', 'Q', 'H'].includes(ecl)) {
             errorLevel.value = ecl;
         }
+    }
+
+    const shared = QRShare.parseShareQuery(params);
+    if (shared.style) {
+        const styleBtn = styleSwitch.querySelector(`.style-option[data-style="${shared.style}"]`);
+        if (styleBtn) {
+            const active = styleSwitch.querySelector('.active');
+            if (active) active.classList.remove('active');
+            styleBtn.classList.add('active');
+            currentStyle = shared.style;
+        }
+    }
+    if (shared.gradient) {
+        gradientToggle.checked = true;
+        gradientOptions.style.display = 'flex';
+        gradientFrom.value = shared.gradient.from;
+        gradientTo.value = shared.gradient.to;
     }
 
     const textInput = document.getElementById('text');
