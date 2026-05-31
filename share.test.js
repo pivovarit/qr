@@ -39,6 +39,7 @@ describe('buildShareQuery', () => {
 describe('parseShareQuery', () => {
     it('accepts only styles from the allowed set', () => {
         assert.equal(parseShareQuery('style=dots').style, 'dots');
+        assert.equal(parseShareQuery('style=diamond').style, 'diamond');
         assert.equal(parseShareQuery('style=hexagons').style, undefined);
     });
 

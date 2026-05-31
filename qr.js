@@ -653,6 +653,16 @@
                     ctx.lineTo(x, y + radius);
                     ctx.quadraticCurveTo(x, y, x + radius, y);
                     ctx.fill();
+                } else if (style === 'diamond' && !useClassic) {
+                    const cx = x + w / 2;
+                    const cy = y + h / 2;
+                    ctx.beginPath();
+                    ctx.moveTo(cx, y);
+                    ctx.lineTo(x + w, cy);
+                    ctx.lineTo(cx, y + h);
+                    ctx.lineTo(x, cy);
+                    ctx.closePath();
+                    ctx.fill();
                 } else {
                     ctx.fillRect(x, y, w, h);
                 }

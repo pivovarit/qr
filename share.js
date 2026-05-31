@@ -6,7 +6,7 @@
     // sender designed (style and gradient included, not just colors/size/ecl).
 
     const DEFAULTS = { fg: '#000000', bg: '#ffffff', size: '256', ecl: 'H', style: 'classic' };
-    const STYLES = ['classic', 'dots'];
+    const STYLES = ['classic', 'dots', 'diamond'];
     const ECLS = ['L', 'M', 'Q', 'H'];
     const GRADIENT_FALLBACK = { from: '#667eea', to: '#764ba2' };
 
